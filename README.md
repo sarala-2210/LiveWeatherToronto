@@ -60,13 +60,6 @@ A modern, responsive website for Techvision Inc., a Toronto-based IT consulting 
    OPENWEATHER_API_KEY=your_api_key_here
    \`\`\`
 
-4. Run the development server:
-   \`\`\`bash
-   npm run dev
-   \`\`\`
-
-5. Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
-
 ## 📂 Project Structure
 
 \`\`\`
