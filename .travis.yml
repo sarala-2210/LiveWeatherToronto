@@ -6,32 +6,33 @@ cache:
   directories:
     - node_modules
 
-# Install Chrome for headless browser testing
+# Add Chrome for headless testing
 addons:
   chrome: stable
 
 before_install:
-  - # Update npm to the latest version
-  - npm i -g npm@latest
+  # Upgrade npm to latest version
+  - npm install -g npm@latest
 
 install:
-  - npm ci
+  # Prefer clean install; fallback to npm install
+  - npm ci || npm install
 
 before_script:
-  - # Start the headless Chrome browser
-  - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
+  # Start headless Chrome (for frontend test runners if needed)
+  - google-chrome-stable --headless --no-sandbox --disable-gpu --remote-debugging-port=9222 http://localhost &
 
 script:
+  # Run tests and generate coverage
   - npm run test:ci
 
-# Report coverage to Codecov
 after_success:
+  # Upload coverage report to Codecov
   - npx codecov
 
-# Deploy to Vercel if tests pass
 deploy:
   provider: script
-  script: npx vercel --prod --token $VERCEL_TOKEN
+  script: npx vercel --prod --token=$VERCEL_TOKEN
   skip_cleanup: true
   on:
     branch: main
