@@ -1,5 +1,5 @@
 {
-  "name": "my-v0-project",
+  "name": "LiveWeatherToronto",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
+    "test": "jest"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
