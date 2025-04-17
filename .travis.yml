@@ -15,16 +15,18 @@ before_install:
   - npm i -g npm@latest
 
 install:
-  - npm ci
+  # Use npm ci for faster, reliable dependency installation
+  - npm ci || npm install
 
 before_script:
   - # Start the headless Chrome browser
   - google-chrome-stable --headless --disable-gpu --remote-debugging-port=9222 http://localhost &
 
 script:
+  # Run tests with coverage
   - npm run test:ci
 
-# Report coverage to Codecov
+# Report coverage to Codecov (optional)
 after_success:
   - npx codecov
 
