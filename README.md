@@ -1,10 +1,6 @@
-# Company Inc. Website
-
-![Build Status](https://travis-ci.com/yourusername/company-website.svg?branch=main)
-![Coverage Status](https://img.shields.io/codecov/c/github/yourusername/company-website/main.svg)
-![License](https://img.shields.io/badge/license-MIT-blue.svg)
-
-A modern, responsive website for Company Inc., a Toronto-based IT consulting firm. This project showcases a professional web presence with real-time features like current date/time display and weather information.
+# TechVision Company(imaginary)
+Hosting Link: [https://liveweathertoronto.vercel.app/]
+A modern, responsive website for Techvision Inc., a Toronto-based IT consulting firm. This project showcases a professional web presence with real-time features like current date/time display and weather information.
 
 ## ✨ Features
 
@@ -166,19 +162,6 @@ The `.travis.yml` file is configured to:
    vercel --prod
    \`\`\`
 
-### Automated Deployment with Travis CI
-
-Once your Travis CI is set up with your Vercel token, every push to the main branch that passes tests will automatically deploy to Vercel.
-
-To set up the Vercel token in Travis CI:
-
-1. Generate a Vercel token:
-   \`\`\`bash
-   vercel tokens create
-   \`\`\`
-
-2. Add the token to Travis CI as an environment variable named `VERCEL_TOKEN`
-
 ## 🌐 Vercel Features
 
 - **Fast Content Delivery:** Global CDN ensures your site loads quickly worldwide
@@ -196,10 +179,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## 🙏 Acknowledgements
 
