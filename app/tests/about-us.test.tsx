@@ -4,6 +4,7 @@
 
 import { render, screen } from "@testing-library/react"
 import AboutUs from "@/components/about-us"
+import { expect, describe, it } from "@jest/globals"
 
 describe("AboutUs Component", () => {
   it("renders the component title", () => {
@@ -13,7 +14,7 @@ describe("AboutUs Component", () => {
 
   it("renders the company description", () => {
     render(<AboutUs />)
-    expect(screen.getByText(/Company Inc. is a leading IT consulting firm/i)).toBeInTheDocument()
+    expect(screen.getByText(/TechVision Solutions is a leading IT consulting firm/i)).toBeInTheDocument()
     expect(screen.getByText(/Founded in 2010/i)).toBeInTheDocument()
     expect(screen.getByText(/Our mission is to empower organizations/i)).toBeInTheDocument()
   })

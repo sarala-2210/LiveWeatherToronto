@@ -4,6 +4,7 @@
 
 import { render, screen, waitFor, fireEvent } from "@testing-library/react"
 import WeatherDisplay from "@/components/weather-display"
+import { expect, jest, describe, beforeEach, it } from "@jest/globals"
 
 // Mock the fetch function
 global.fetch = jest.fn()
@@ -37,11 +38,10 @@ describe("WeatherDisplay Component", () => {
     // Mock the fetch to never resolve during this test
     ;(global.fetch as jest.Mock).mockImplementation(() => new Promise(() => {}))
 
-    render(<WeatherDisplay />)
+    const { container } = render(<WeatherDisplay />)
 
-    // Check for loading indicators (skeletons)
-    const skeletons = document.querySelectorAll(".skeleton")
-    expect(skeletons.length).toBeGreaterThan(0)
+    // Check for loading indicators
+    expect(container.querySelector(".animate-pulse")).toBeInTheDocument()
   })
 
   it("displays weather data when fetch is successful", async () => {

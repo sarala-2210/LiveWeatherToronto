@@ -4,6 +4,7 @@
 
 import { render, screen } from "@testing-library/react"
 import OurCustomers from "@/components/our-customers"
+import { expect, describe, it } from "@jest/globals"
 
 describe("OurCustomers Component", () => {
   it("renders the component title", () => {
@@ -20,10 +21,10 @@ describe("OurCustomers Component", () => {
     expect(screen.getByText("Michael Chen")).toBeInTheDocument()
     expect(screen.getByText("Emily Rodriguez")).toBeInTheDocument()
 
-    // Check for testimonial companies
-    expect(screen.getByText("TechNova Inc.")).toBeInTheDocument()
-    expect(screen.getByText("Global Finance Partners")).toBeInTheDocument()
-    expect(screen.getByText("Healthcare Solutions")).toBeInTheDocument()
+    // Check for testimonial companies - use getAllByText for elements that appear multiple times
+    expect(screen.getAllByText("TechNova Inc.").length).toBeGreaterThan(0)
+    expect(screen.getAllByText("Global Finance Partners").length).toBeGreaterThan(0)
+    expect(screen.getAllByText("Healthcare Solutions").length).toBeGreaterThan(0)
   })
 
   it("renders the clients section", () => {
