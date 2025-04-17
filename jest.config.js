@@ -12,6 +12,7 @@ const customJestConfig = {
   moduleNameMapper: {
     "^@/components/(.*)$": "<rootDir>/components/$1",
     "^@/app/(.*)$": "<rootDir>/app/$1",
+    "^@/lib/(.*)$": "<rootDir>/lib/$1",
   },
   collectCoverage: true,
   collectCoverageFrom: [
@@ -29,6 +30,7 @@ const customJestConfig = {
       branches: 40,
     },
   },
+  testMatch: ["**/__tests__/**/*.+(ts|tsx|js)", "**/?(*.)+(spec|test).+(ts|tsx|js)"],
 }
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
