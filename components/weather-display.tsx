@@ -79,7 +79,6 @@ export default function WeatherDisplay() {
           hour12: false,
         }
         setLastUpdated(now.toLocaleTimeString("en-CA", options))
-
         setLoading(false)
       } catch (err: any) {
         if (process.env.NODE_ENV === "development") {
@@ -195,7 +194,7 @@ export default function WeatherDisplay() {
       </div>
       <CardContent className="p-0">
         {loading ? (
-          <div className="space-y-2 p-4">
+          <div className="space-y-2 p-4" data-testid="loading-skeleton">
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-10 w-3/4" />
             <Skeleton className="h-4 w-1/2" />

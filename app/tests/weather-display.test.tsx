@@ -32,16 +32,19 @@ const mockWeatherData = {
 describe("WeatherDisplay Component", () => {
   beforeEach(() => {
     jest.clearAllMocks()
+
+    // Mock window.open
+    window.open = jest.fn()
   })
 
   it("displays loading state initially", () => {
     // Mock the fetch to never resolve during this test
     ;(global.fetch as jest.Mock).mockImplementation(() => new Promise(() => {}))
 
-    const { container } = render(<WeatherDisplay />)
+    render(<WeatherDisplay />)
 
     // Check for loading indicators
-    expect(container.querySelector(".animate-pulse")).toBeInTheDocument()
+    expect(screen.getByTestId("loading-skeleton")).toBeInTheDocument()
   })
 
   it("displays weather data when fetch is successful", async () => {
@@ -167,5 +170,28 @@ describe("WeatherDisplay Component", () => {
     await waitFor(() => {
       expect(screen.getByText("light rain")).toBeInTheDocument()
     })
+  })
+
+  it("opens environment check in new window when button is clicked", async () => {
+    // Mock failed response to show error UI with environment check button
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      json: async () => ({ error: "Server error" }),
+    })
+
+    render(<WeatherDisplay />)
+
+    // Wait for the error UI
+    await waitFor(() => {
+      expect(screen.getByText(/Error 500/i)).toBeInTheDocument()
+    })
+
+    // Click environment check button
+    const envButton = screen.getByText("Check Environment")
+    fireEvent.click(envButton)
+
+    // Verify window.open was called with correct URL
+    expect(window.open).toHaveBeenCalledWith("/api/debug-env", "_blank")
   })
 })
