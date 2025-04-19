@@ -49,7 +49,14 @@ export default function WeatherDisplay() {
         setError(null)
         setErrorDetails(null)
 
+<<<<<<< HEAD
         const response = await fetch(`/api/weather?t=${Date.now()}`, {
+=======
+        console.log("Fetching weather data from API route...")
+
+        // Add cache-busting parameter and ensure no caching
+        const response = await fetch(`/api/weather?t=${new Date().getTime()}`, {
+>>>>>>> b81fb6a2d4f7c9432a82c32b250cbcf771dcaba9
           cache: "no-store",
           headers: {
             "Cache-Control": "no-cache, no-store, must-revalidate",
@@ -195,7 +202,7 @@ export default function WeatherDisplay() {
       </div>
       <CardContent className="p-0">
         {loading ? (
-          <div className="space-y-2 p-4">
+          <div className="space-y-2 p-4" data-testid="loading-skeleton">
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-10 w-3/4" />
             <Skeleton className="h-4 w-1/2" />
