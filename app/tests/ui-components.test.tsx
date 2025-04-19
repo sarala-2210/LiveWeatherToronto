@@ -75,14 +75,19 @@ describe("UI Components", () => {
 
       // First tab should be active by default
       expect(screen.getByText("Content 1")).toBeVisible()
-      expect(screen.queryByText("Content 2")).not.toBeVisible()
+
+      // Second tab content should not be visible initially
+      const tab2Content = screen.queryByText("Content 2")
+      expect(tab2Content).not.toBeVisible()
 
       // Click second tab
       fireEvent.click(screen.getByRole("tab", { name: "Tab 2" }))
 
       // Second tab content should now be visible
-      expect(screen.queryByText("Content 1")).not.toBeVisible()
       expect(screen.getByText("Content 2")).toBeVisible()
+
+      // First tab content should not be visible now
+      expect(screen.queryByText("Content 1")).not.toBeVisible()
     })
   })
 })

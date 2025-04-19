@@ -4,7 +4,7 @@
 
 import { render, screen, fireEvent, waitFor } from "@testing-library/react"
 import WeatherDisplay from "@/components/weather-display"
-import { expect, jest, beforeEach } from "@jest/globals"
+import { expect, jest, beforeEach, describe, it } from "@jest/globals"
 
 // Mock fetch
 global.fetch = jest.fn()
@@ -12,6 +12,9 @@ global.fetch = jest.fn()
 describe("Error Handling", () => {
   beforeEach(() => {
     jest.clearAllMocks()
+
+    // Mock window.open
+    window.open = jest.fn()
   })
 
   it("handles API errors gracefully", async () => {
@@ -77,15 +80,11 @@ describe("Error Handling", () => {
     const envButton = screen.getByText("Check Environment")
     expect(envButton).toBeInTheDocument()
 
-    // Mock window.open
-    const openMock = jest.fn()
-    window.open = openMock
-
     // Click environment button
     fireEvent.click(envButton)
 
     // Verify window.open was called with correct URL
-    expect(openMock).toHaveBeenCalledWith("/api/debug-env", "_blank")
+    expect(window.open).toHaveBeenCalledWith("/api/debug-env", "_blank")
   })
 
   it("recovers from errors after retry", async () => {
