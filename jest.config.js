@@ -1,18 +1,20 @@
-const nextJest = require("next/jest")
+const nextJest = require("next/jest");
 
 const createJestConfig = nextJest({
   // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
   dir: "./",
-})
+});
 
 // Add any custom config to be passed to Jest
 const customJestConfig = {
   setupFilesAfterEnv: ["<rootDir>/jest.setup.js"],
-  testEnvironment: "jest-environment-jsdom",
+  testEnvironment: "jsdom", // This is the default value, so it's optional to specify it
   moduleNameMapper: {
     "^@/components/(.*)$": "<rootDir>/components/$1",
     "^@/app/(.*)$": "<rootDir>/app/$1",
     "^@/lib/(.*)$": "<rootDir>/lib/$1",
+    "^@/pages/(.*)$": "<rootDir>/pages/$1", // If you are using @/pages
+    "^@/styles/(.*)$": "<rootDir>/styles/$1", // If you are using @/styles
   },
   collectCoverage: true,
   collectCoverageFrom: [
@@ -30,11 +32,14 @@ const customJestConfig = {
       branches: 40,
     },
   },
-  testMatch: ["**/__tests__/**/*.+(ts|tsx|js)", "**/?(*.)+(spec|test).+(ts|tsx|js)"],
+  testMatch: [
+    "**/__tests__/**/*.+(ts|tsx|js)",
+    "**/?(*.)+(spec|test).+(ts|tsx|js)",
+  ],
   transform: {
     "^.+\\.(ts|tsx)$": "ts-jest",
   },
-}
+};
 
-// createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
-module.exports = createJestConfig(customJestConfig)
+// Create Jest config to load the Next.js config and async configuration
+module.exports = createJestConfig(customJestConfig);

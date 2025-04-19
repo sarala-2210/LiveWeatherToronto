@@ -49,14 +49,7 @@ export default function WeatherDisplay() {
         setError(null)
         setErrorDetails(null)
 
-<<<<<<< HEAD
         const response = await fetch(`/api/weather?t=${Date.now()}`, {
-=======
-        console.log("Fetching weather data from API route...")
-
-        // Add cache-busting parameter and ensure no caching
-        const response = await fetch(`/api/weather?t=${new Date().getTime()}`, {
->>>>>>> b81fb6a2d4f7c9432a82c32b250cbcf771dcaba9
           cache: "no-store",
           headers: {
             "Cache-Control": "no-cache, no-store, must-revalidate",
@@ -86,7 +79,6 @@ export default function WeatherDisplay() {
           hour12: false,
         }
         setLastUpdated(now.toLocaleTimeString("en-CA", options))
-
         setLoading(false)
       } catch (err: any) {
         if (process.env.NODE_ENV === "development") {
