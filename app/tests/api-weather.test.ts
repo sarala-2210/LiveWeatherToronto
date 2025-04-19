@@ -1,19 +1,25 @@
 /**
  * @jest-environment node
  */
+import dotenv from "dotenv"
+dotenv.config({ path: ".env.local" }) // 👈 loads the variables
 
 import { GET } from "@/app/api/weather/route"
-import { describe, beforeEach, it, expect, jest } from "@jest/globals"
+import { describe, beforeEach, afterEach, it, expect, jest } from "@jest/globals"
 
 // Mock fetch
 global.fetch = jest.fn()
 
-// Mock environment variables
-process.env.OPENWEATHER_API_KEY = "test-api-key"
+// Ensure the API key is set for the tests
+process.env.OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY || "test-api-key"
 
 describe("Weather API Route", () => {
   beforeEach(() => {
     jest.clearAllMocks()
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks() // Cleanup mocks after each test
   })
 
   it("returns weather data when API call is successful", async () => {

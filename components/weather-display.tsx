@@ -3,7 +3,17 @@
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import { CloudRain, Thermometer, AlertTriangle, Sun, Cloud, Wind, Droplets, RefreshCw, Clock } from "lucide-react"
+import {
+  CloudRain,
+  Thermometer,
+  AlertTriangle,
+  Sun,
+  Cloud,
+  Wind,
+  Droplets,
+  RefreshCw,
+  Clock,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface WeatherData {
@@ -39,9 +49,6 @@ export default function WeatherDisplay() {
         setError(null)
         setErrorDetails(null)
 
-        console.log("Fetching weather data from API route...")
-
-        // Add cache-busting parameter and ensure no caching
         const response = await fetch(`/api/weather?t=${Date.now()}`, {
           cache: "no-store",
           headers: {
@@ -53,34 +60,38 @@ export default function WeatherDisplay() {
         const data = await response.json()
 
         if (!response.ok) {
-          console.error("API Error Response:", data)
+          if (process.env.NODE_ENV === "development") {
+            console.error("API Error Response:", data)
+          }
           setError(`Error ${response.status}: ${data.error || "Unknown error"}`)
           setErrorDetails(data.details || data.message || "No additional details")
           setLoading(false)
           return
         }
 
-        console.log("Weather data received:", data)
         setWeather(data)
 
-        // Format the last updated time
         const now = new Date()
-        const options = { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false }
+        const options = {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+          hour12: false,
+        }
         setLastUpdated(now.toLocaleTimeString("en-CA", options))
 
         setLoading(false)
-      } catch (err) {
-        console.error("Error fetching weather:", err)
+      } catch (err: any) {
+        if (process.env.NODE_ENV === "development") {
+          console.error("Error fetching weather:", err)
+        }
         setError(`Client error: ${err.message}`)
         setLoading(false)
       }
     }
 
     fetchWeather()
-
-    // Refresh weather data every 10 minutes
     const refreshInterval = setInterval(fetchWeather, 10 * 60 * 1000)
-
     return () => clearInterval(refreshInterval)
   }, [retryCount])
 
@@ -88,7 +99,6 @@ export default function WeatherDisplay() {
     setRetryCount((prev) => prev + 1)
   }
 
-  // Get weather icon and background based on weather condition
   const getWeatherStyles = () => {
     if (!weather || !weather.weather[0])
       return {
@@ -141,7 +151,9 @@ export default function WeatherDisplay() {
           <div className="space-y-4">
             <p className="text-red-500">{error}</p>
             {errorDetails && (
-              <div className="text-xs text-gray-500 bg-gray-100 p-2 rounded overflow-auto max-h-24">{errorDetails}</div>
+              <div className="text-xs text-gray-500 bg-gray-100 p-2 rounded overflow-auto max-h-24">
+                {errorDetails}
+              </div>
             )}
             <div className="flex justify-between items-center">
               <Button onClick={handleRetry} size="sm" className="bg-blue-500 hover:bg-blue-600">
@@ -194,7 +206,9 @@ export default function WeatherDisplay() {
               <div className="text-center">
                 <div className="flex items-center justify-center">
                   <Thermometer className="h-6 w-6 text-red-500 mr-2" />
-                  <span className="text-4xl font-bold text-blue-900">{Math.round(weather?.main.temp || 0)}°C</span>
+                  <span className="text-4xl font-bold text-blue-900">
+                    {Math.round(weather?.main.temp || 0)}°C
+                  </span>
                 </div>
 
                 {weather?.weather[0] && (
@@ -212,7 +226,6 @@ export default function WeatherDisplay() {
               </div>
             </div>
 
-            {/* Additional weather details */}
             <div className="grid grid-cols-2 gap-2 p-4 bg-blue-50">
               <div className="flex items-center p-2 bg-white rounded-lg shadow-sm">
                 <Droplets className="h-5 w-5 text-blue-500 mr-2" />
