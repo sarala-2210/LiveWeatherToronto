@@ -46,16 +46,17 @@ A modern, responsive website for Techvision Inc., a Toronto-based IT consulting 
 
 1. Clone the repository:
    \`\`\`bash
-   git clone https://github.com/yourusername/company-website.git
+   git clone https://github.com/sarala-2210/LiveWeatherToronto.git
+   
    cd company-website
    \`\`\`
 
-2. Install dependencies:
+3. Install dependencies:
    \`\`\`bash
    npm install
    \`\`\`
 
-3. Create a `.env.local` file in the root directory and add your OpenWeatherMap API key:
+4. Create a `.env.local` file in the root directory and add your OpenWeatherMap API key:
    \`\`\`
    OPENWEATHER_API_KEY=your_api_key_here
    \`\`\`
@@ -77,7 +78,7 @@ company-website/
 │   └── weather-display.tsx # Weather display component
 ├── public/               # Static files
 ├── .github/              # GitHub Actions configuration
-├── .travis.yml           # Travis CI configuration
+├── .github Actions      
 ├── jest.config.js        # Jest configuration
 └── tailwind.config.ts    # Tailwind CSS configuration
 \`\`\`
