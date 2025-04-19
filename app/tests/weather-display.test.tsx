@@ -32,16 +32,21 @@ const mockWeatherData = {
 describe("WeatherDisplay Component", () => {
   beforeEach(() => {
     jest.clearAllMocks()
+    jest.useFakeTimers()
+  })
+
+  afterEach(() => {
+    jest.useRealTimers()
   })
 
   it("displays loading state initially", () => {
     // Mock the fetch to never resolve during this test
     ;(global.fetch as jest.Mock).mockImplementation(() => new Promise(() => {}))
 
-    const { container } = render(<WeatherDisplay />)
+    render(<WeatherDisplay />)
 
     // Check for loading indicators
-    expect(container.querySelector(".animate-pulse")).toBeInTheDocument()
+    expect(screen.getByTestId("loading-skeleton")).toBeInTheDocument()
   })
 
   it("displays weather data when fetch is successful", async () => {
@@ -167,5 +172,142 @@ describe("WeatherDisplay Component", () => {
     await waitFor(() => {
       expect(screen.getByText("light rain")).toBeInTheDocument()
     })
+  })
+
+  it("updates last updated time when data is fetched", async () => {
+    // Mock date for consistent testing
+    const mockDate = new Date("2023-01-01T12:00:00Z")
+    jest
+      .spyOn(global, "Date")
+      .mockImplementation(() => mockDate)
+
+    // Mock successful response
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockWeatherData,
+    })
+
+    render(<WeatherDisplay />)
+
+    // Wait for the data to load
+    await waitFor(() => {
+      expect(screen.getByText("20°C")).toBeInTheDocument()
+    })
+
+    // Check if last updated time is displayed
+    expect(screen.getByText("12:00:00")).toBeInTheDocument()
+  })
+
+  it("refreshes data when refresh button is clicked", async () => {
+    // First fetch
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        ...mockWeatherData,
+        main: { ...mockWeatherData.main, temp: 20 },
+      }),
+    })
+
+    // Second fetch (after refresh)
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        ...mockWeatherData,
+        main: { ...mockWeatherData.main, temp: 22 },
+      }),
+    })
+
+    render(<WeatherDisplay />)
+
+    // Wait for initial data
+    await waitFor(() => {
+      expect(screen.getByText("20°C")).toBeInTheDocument()
+    })
+
+    // Click refresh button
+    const refreshButton = screen.getByTitle("Refresh weather data")
+    fireEvent.click(refreshButton)
+
+    // Wait for updated data
+    await waitFor(() => {
+      expect(screen.getByText("22°C")).toBeInTheDocument()
+    })
+  })
+
+  it("handles detailed error information", async () => {
+    // Mock failed response with details
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 401,
+      json: async () => ({
+        error: "API key error",
+        details: "Invalid API key provided",
+      }),
+    })
+
+    render(<WeatherDisplay />)
+
+    // Wait for the error message
+    await waitFor(() => {
+      expect(screen.getByText(/Error 401/i)).toBeInTheDocument()
+    })
+
+    // Check for error details
+    expect(screen.getByText("Invalid API key provided")).toBeInTheDocument()
+  })
+
+  it("opens environment check in new window when button is clicked", async () => {
+    // Mock window.open
+    const openMock = jest.fn()
+    window.open = openMock
+
+    // Mock failed response to show error UI with environment check button
+    ;(global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      json: async () => ({ error: "Server error" }),
+    })
+
+    render(<WeatherDisplay />)
+
+    // Wait for the error UI
+    await waitFor(() => {
+      expect(screen.getByText(/Error 500/i)).toBeInTheDocument()
+    })
+
+    // Click environment check button
+    const envButton = screen.getByText("Check Environment")
+    fireEvent.click(envButton)
+
+    // Verify window.open was called with correct URL
+    expect(openMock).toHaveBeenCalledWith("/api/debug-env", "_blank")
+  })
+
+  it("sets up and cleans up refresh interval", async () => {
+    // Mock successful response
+    ;(global.fetch as jest.Mock).mockResolvedValue({
+      ok: true,
+      json: async () => mockWeatherData,
+    })
+
+    // Spy on setInterval and clearInterval
+    jest.spyOn(global, "setInterval")
+    jest.spyOn(global, "clearInterval")
+
+    const { unmount } = render(<WeatherDisplay />)
+
+    // Wait for initial data load
+    await waitFor(() => {
+      expect(screen.getByText("20°C")).toBeInTheDocument()
+    })
+
+    // Check if setInterval was called with correct refresh time (10 minutes)
+    expect(setInterval).toHaveBeenCalledWith(expect.any(Function), 10 * 60 * 1000)
+
+    // Unmount component
+    unmount()
+
+    // Check if clearInterval was called
+    expect(clearInterval).toHaveBeenCalled()
   })
 })
